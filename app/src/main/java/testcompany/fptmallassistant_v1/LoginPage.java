@@ -20,7 +20,7 @@ public class LoginPage extends Activity{
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        // full screen here, NG behavior observed if declard in manifest
+        // full screen here, NG behavior observed if declared in manifest
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -34,8 +34,7 @@ public class LoginPage extends Activity{
         {
             public void onClick(View v)
             {
-                // Summon all initialisation for Watson in here
-
+                // add login if necessary
 
                 // Then launch the fucking activity
                 Intent intentModeOne = new Intent(LoginPage.this, ChatWindow.class);
