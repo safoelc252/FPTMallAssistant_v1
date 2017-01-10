@@ -1,16 +1,15 @@
 package testcompany.fptmallassistant_v1;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.view.ViewGroup.LayoutParams;
 
 /**
  * Created by Cleofas.villarin on 1/6/2017.
@@ -34,6 +33,9 @@ public class LoginPage extends Activity{
         {
             public void onClick(View v)
             {
+                if (!isInternetConnected())
+                    return;
+
                 // add login if necessary
 
                 // Then launch the fucking activity
@@ -42,5 +44,21 @@ public class LoginPage extends Activity{
             }
         });
 
+    }
+
+    private boolean isInternetConnected()
+    {
+        // check whether internet connection is available
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            connected = true;
+        }
+        else
+            connected = false;
+
+        return connected;
     }
 }
