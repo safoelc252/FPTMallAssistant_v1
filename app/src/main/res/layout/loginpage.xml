@@ -6,9 +6,19 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/login_button"
+        android:text="EN Version"
+        android:id="@+id/enversion_button"
         android:layout_gravity="center_horizontal"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="195dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JP VERSION"
+        android:id="@+id/jpversion_button"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/enversion_button"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

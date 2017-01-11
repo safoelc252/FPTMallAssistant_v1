@@ -26,10 +26,11 @@ public class LoginPage extends Activity{
         setContentView(R.layout.loginpage);
 
         // Handle the button clicks
-        final Button login_button = (Button)findViewById(R.id.login_button);
+        final Button enversion_button = (Button)findViewById(R.id.enversion_button);
+        final Button jpversion_button = (Button)findViewById(R.id.jpversion_button);
 
-        // and listener
-        login_button.setOnClickListener(new View.OnClickListener()
+        // enversion listener
+        enversion_button.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
@@ -40,10 +41,27 @@ public class LoginPage extends Activity{
 
                 // Then launch the fucking activity
                 Intent intentModeOne = new Intent(LoginPage.this, ChatWindow.class);
+                intentModeOne.putExtra("EXTRA_CLICK_ORIGIN", "english");
                 startActivity(intentModeOne);
             }
         });
 
+        // jpversion listener
+        jpversion_button.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                if (!isInternetConnected())
+                    return;
+
+                // add login if necessary
+
+                // Then launch the fucking activity
+                Intent intentModeOne = new Intent(LoginPage.this, ChatWindow.class);
+                intentModeOne.putExtra("EXTRA_CLICK_ORIGIN", "japanese");
+                startActivity(intentModeOne);
+            }
+        });
     }
 
     private boolean isInternetConnected()
