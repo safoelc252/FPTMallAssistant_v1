@@ -170,9 +170,9 @@ public class ChatWindow extends Activity {
         output = "<voice-transformation " +
                 "type=\"Custom\" " +
                 "glottal_tension=\"-100%\" " +
-                "breathiness=\"90%\" " +
+                "breathiness=\"50%\" " +
                 "timbre=\"Sunrise\" " +
-                "rate=\"-30%\" " +
+                "pitch_range=\"80%\" " +
                 "pitch=\"-100%\">" +
                 input + "</voice-transformation>";
         return output;
