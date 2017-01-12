@@ -49,6 +49,9 @@ public class ChatWindow extends Activity {
     private ArrayAdapter<String> listview_adapter;
     private List<String> responses;
 
+    // Info from login screen
+    private String language = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +76,7 @@ public class ChatWindow extends Activity {
         convohist_listview.setAdapter(listview_adapter);
 
         // Initialize TTS
-        String language = getIntent().getStringExtra("EXTRA_CLICK_ORIGIN");
+        language = getIntent().getStringExtra("EXTRA_CLICK_ORIGIN");
         textToSpeechUtil = new TextToSpeechUtil(tts_username, tts_password, tts_endpoint, language);
 
         // Initialize convo
@@ -137,11 +140,46 @@ public class ChatWindow extends Activity {
 
         }
 
-        // convert the response to speech
+        // apply voice modifications and convert the response to speech
+        if (language.equals("english")) {
+            allreply = alterVoiceTransformation(allreply);
+            allreply = alterVoiceExpressiveness(allreply);
+        }
         textToSpeechUtil.processText(allreply);
         textToSpeechUtil.playTTS();
 
         // update ListView
         listview_adapter.notifyDataSetChanged();
+    }
+
+    private String alterVoiceExpressiveness(String input)
+    {
+        String output = "";
+
+        // insert voice expressiveness xml
+        if (input.toLowerCase().contains("sorry"))
+            output = "<speak><express-as type=\"Apology\">" + input + "</express-as></speak>";
+        else
+            output = "<speak><express-as type=\"GoodNews\">" + input + "</express-as></speak>";
+
+        return output;
+    }
+
+    private String alterVoiceTransformation(String input) {
+        String output = "";
+        output = "<voice-transformation " +
+                "type=\"Custom\" " +
+                "glottal_tension=\"-100%\" " +
+                "breathiness=\"90%\" " +
+                "timbre=\"Sunrise\" " +
+                "rate=\"-30%\" " +
+                "pitch=\"-100%\">" +
+                input + "</voice-transformation>";
+        return output;
+    }
+
+    private void applyCustomization(String input)
+    {
+
     }
 }

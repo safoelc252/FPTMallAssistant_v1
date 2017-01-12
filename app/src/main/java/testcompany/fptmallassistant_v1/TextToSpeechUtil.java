@@ -48,11 +48,11 @@ public class TextToSpeechUtil {
         }
 
         if (lang.equals("english"))
-            setVoice(Voice.EN_LISA);
+            setVoice(Voice.EN_ALLISON);
         else if (lang.equals("japanese"))
             setVoice(Voice.JA_EMI);
         else
-            setVoice(Voice.EN_LISA);
+            setVoice(Voice.EN_ALLISON);
         // es-LA_SofiaVoice,pt-BR_IsabelaVoice,en-US_MichaelVoice,ja-JP_EmiVoice,en-US_AllisonVoice,fr-FR_ReneeVoice,it-IT_FrancescaVoice
         // es-ES_LauraVoice,de-DE_BirgitVoice,es-ES_EnriqueVoice,de-DE_DieterVoice,en-US_LisaVoice,en-GB_KateVoice,es-US_SofiaVoice
     }
