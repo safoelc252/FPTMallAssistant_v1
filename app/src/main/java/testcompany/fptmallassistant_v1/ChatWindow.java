@@ -27,7 +27,7 @@ import java.util.ListIterator;
  */
 public class ChatWindow extends Activity {
 
-    // Watson credentials
+    // Watson service credentials
     private String convo_username = "556c5698-f097-4e49-9dd4-c0f08aa5133e";
     private String convo_password = "F8yYOcPWgtpC";
 
@@ -144,6 +144,7 @@ public class ChatWindow extends Activity {
         if (language.equals("english")) {
             allreply = alterVoiceTransformation(allreply);
             allreply = alterVoiceExpressiveness(allreply);
+            allreply = applyCustomization(allreply);
         }
         textToSpeechUtil.processText(allreply);
         textToSpeechUtil.playTTS();
@@ -178,8 +179,53 @@ public class ChatWindow extends Activity {
         return output;
     }
 
-    private void applyCustomization(String input)
+    private String applyCustomization(String input)
     {
+        //  \<speak xml:lang=\"En-US\" version=\"1.0\">" + "<say-as interpret-as=\"letters\">Hello</say-as></speak>");
+        //  The <phoneme alphabet="ibm" ph=".0tx.1me.0fo">tomato</phoneme> was ripe.
+        //  The baby was born on <say-as interpret-as="date" format="mdy">3/4/2016</say-as>.
+        //  I work at <sub alias="International Business Machines">IBM</sub>.
 
+        String output = input;
+        String opentag = "";
+        String closetag = "";
+
+        // apply correct pronounciation of cars
+        if (output.toLowerCase().contains("lamborghini"))
+        {
+            opentag = "<phoneme alphabet=\"ipa\" ph=\"lamborˈɡiːni\">";
+            closetag = "</phoneme>";
+            output = output.replace("Lamborghini", opentag + "Lamborghini" + closetag);
+            output = output.replace("lamborghini", opentag + "lamborghini" + closetag);
+            output = output.replace("LAMBORGHINI", opentag + "LAMBORGHINI" + closetag);
+        }
+        if (output.toLowerCase().contains("chevrolet"))
+        {
+            opentag = "<phoneme alphabet=\"ipa\" ph=\"ʃɛvrəˈleɪ\">";
+            closetag = "</phoneme>";
+            output = output.replace("Chevrolet", opentag + "Chevrolet" + closetag);
+            output = output.replace("chevrolet", opentag + "chevrolet" + closetag);
+            output = output.replace("CHEVROLET", opentag + "CHEVROLET" + closetag);
+        }
+        if (output.toLowerCase().contains("volkswagen"))
+        {
+            opentag = "<phoneme alphabet=\"ipa\" ph=\"ˈfɔlksˌvaːɡŋˈ\">";
+            closetag = "</phoneme>";
+            output = output.replace("Volkswagen", opentag + "Volkswagen" + closetag);
+            output = output.replace("volkswagen", opentag + "volkswagen" + closetag);
+            output = output.replace("VOLKSWAGEN", opentag + "VOLKSWAGEN" + closetag);
+        }
+        if (output.toLowerCase().contains("peugeot"))
+        {
+            opentag = "<phoneme alphabet=\"ipa\" ph=\"puːˈʒoʊ\">";
+            closetag = "</phoneme>";
+            output = output.replace("Peugeot", opentag + "Peugeot" + closetag);
+            output = output.replace("peugeot", opentag + "peugeot" + closetag);
+            output = output.replace("PEUGEOT", opentag + "PEUGEOT" + closetag);
+        }
+        Log.d("applyCustomization: ", output);
+        return output;
     }
+
+    // my customization ID: 82753984-8a64-4ca0-b6f0-ade61f06e9da
 }
