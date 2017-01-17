@@ -1,7 +1,10 @@
 package testcompany.fptmallassistant_v1;
 
 import android.app.Activity;
+import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -14,9 +17,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -52,6 +58,8 @@ public class ChatWindow extends Activity {
 
     // Info from login screen
     private String language = "";
+
+    private MediaRecorder mRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +99,19 @@ public class ChatWindow extends Activity {
         FPTMallAssistant = new ConversationServiceUtil(convo_username, convo_password, workspaceID);
         ConvoResponseHandler(FPTMallAssistant.sendRequest("")); // send an empty string for convo init
 
-        // Handle the button clicks
+        // Handle send button click
         final Button send_button = (Button) findViewById(R.id.send_button);
         send_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onSendClick();
+            }
+        });
+
+        // Handle record button click
+        final ImageButton record_imgbutton = (ImageButton) findViewById(R.id.record_imgbutton);
+        record_imgbutton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                onRecordClick();
             }
         });
 
@@ -111,6 +127,53 @@ public class ChatWindow extends Activity {
                 return false;
             }
         });
+    }
+
+    private void onRecordClick() {
+        // play a chime
+        MediaPlayer chimeplayer = MediaPlayer.create(this, R.raw.record_chime);
+        chimeplayer.start();
+
+        // display a toast message
+        displayToastMsg("Start recording!");
+
+
+        // record a message for 5secs maybe? TODO: research standard wait time of voice recog softwares
+
+
+        // send the recorded message to watson
+        // recover text
+        // autosend the message
+    }
+
+    private void stopRecording() {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+    }
+
+    private void startRecording() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile("recorded_info");
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.d("ChatWindow: ", "prepare() failed");
+        }
+
+        mRecorder.start();
+    }
+
+    private void displayToastMsg(String message)
+    {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
     }
 
     private void onSendClick() {
@@ -230,5 +293,4 @@ public class ChatWindow extends Activity {
         return output;
     }
     */
-
 }

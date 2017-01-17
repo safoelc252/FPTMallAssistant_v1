@@ -10,9 +10,8 @@
             android:inputType="text"
             android:singleLine="true"
             android:imeOptions="actionDone"
-            android:layout_weight="0.66"
             android:layout_above="@+id/convhist_listview"
-            android:layout_toLeftOf="@+id/send_button"
+            android:layout_toLeftOf="@+id/record_imgbutton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -36,5 +35,16 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/record_imgbutton"
+            android:background="@drawable/ic_action_name"
+            android:layout_above="@+id/convhist_listview"
+            android:layout_alignTop="@+id/chat_input"
+            android:layout_toLeftOf="@+id/send_button"
+            android:layout_toStartOf="@+id/send_button"
+            android:clickable="true" />
 
 </RelativeLayout>
