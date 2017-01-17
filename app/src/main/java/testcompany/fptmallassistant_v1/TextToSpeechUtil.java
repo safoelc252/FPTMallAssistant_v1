@@ -27,6 +27,7 @@ public class TextToSpeechUtil {
     private Voice voice;
     private AudioTrack track;
     private int sampleRate;
+    private String customizationID = null;
 
     public void setVoice(Voice voice)
     {
@@ -38,7 +39,7 @@ public class TextToSpeechUtil {
         return this.voice;
     }
 
-    public TextToSpeechUtil(String username, String password, String endPoint, String lang)
+    public TextToSpeechUtil(String username, String password, String endPoint, String lang, String customizationID)
     {
         service = new TextToSpeech();
         service.setUsernameAndPassword(username, password);
@@ -46,6 +47,8 @@ public class TextToSpeechUtil {
         {
             service.setEndPoint(endPoint);
         }
+
+        this.customizationID = customizationID;
 
         if (lang.equals("english"))
             setVoice(Voice.EN_ALLISON);
@@ -63,7 +66,7 @@ public class TextToSpeechUtil {
             @Override
             public void run() {
                 try {
-                    InputStream result = service.synthesize(text, getVoice()).execute();
+                    InputStream result = service.synthesize(text, getVoice(), null, customizationID).execute();
                     int minBufferSize = AudioTrack.getMinBufferSize(48000, AudioFormat.CHANNEL_OUT_MONO,
                             AudioFormat.ENCODING_PCM_16BIT);
 

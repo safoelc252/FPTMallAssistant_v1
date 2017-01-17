@@ -34,6 +34,7 @@ public class ChatWindow extends Activity {
     private String tts_username = "b132f590-2efa-46c9-b6f9-89e4a59d20f1";
     private String tts_password = "JuQESeE2Uhmf";
     private String tts_endpoint = "https://stream.watsonplatform.net/speech-to-text/api";
+    private String tts_customizationID = "696d0b97-062d-4c18-b5e9-21a33e0cb341";
 
     private ConversationServiceUtil FPTMallAssistant;
     private String workspaceIDEN = "a1681b35-87d9-4479-845e-da2c6cc11b63"; // English FPT Mall Assistant workspace ID
@@ -77,7 +78,7 @@ public class ChatWindow extends Activity {
 
         // Initialize TTS
         language = getIntent().getStringExtra("EXTRA_CLICK_ORIGIN");
-        textToSpeechUtil = new TextToSpeechUtil(tts_username, tts_password, tts_endpoint, language);
+        textToSpeechUtil = new TextToSpeechUtil(tts_username, tts_password, tts_endpoint, language, tts_customizationID);
 
         // Initialize convo
         String workspaceID = "";
@@ -144,7 +145,7 @@ public class ChatWindow extends Activity {
         if (language.equals("english")) {
             allreply = alterVoiceTransformation(allreply);
             allreply = alterVoiceExpressiveness(allreply);
-            allreply = applyCustomization(allreply);
+            //allreply = applyCustomization(allreply);
         }
         textToSpeechUtil.processText(allreply);
         textToSpeechUtil.playTTS();
@@ -179,6 +180,9 @@ public class ChatWindow extends Activity {
         return output;
     }
 
+    /* No Longer Used..
+    // Customization is transferred to RESTful
+    // customization ID: 696d0b97-062d-4c18-b5e9-21a33e0cb341
     private String applyCustomization(String input)
     {
         //  \<speak xml:lang=\"En-US\" version=\"1.0\">" + "<say-as interpret-as=\"letters\">Hello</say-as></speak>");
@@ -223,9 +227,8 @@ public class ChatWindow extends Activity {
             output = output.replace("peugeot", opentag + "peugeot" + closetag);
             output = output.replace("PEUGEOT", opentag + "PEUGEOT" + closetag);
         }
-        Log.d("applyCustomization: ", output);
         return output;
     }
+    */
 
-    // my customization ID: 82753984-8a64-4ca0-b6f0-ade61f06e9da
 }
