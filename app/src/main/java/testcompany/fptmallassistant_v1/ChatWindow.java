@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -59,7 +60,11 @@ public class ChatWindow extends Activity {
     // Info from login screen
     private String language = "";
 
-    private MediaRecorder mRecorder;
+    private MediaRecorder mRecorder = null;
+    private MediaPlayer   mPlayer = null;
+    private String mFileName = null;
+
+    private static final String LOG_TAG = "ChatWindow";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,10 @@ public class ChatWindow extends Activity {
 
         // to enable volume control
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        // Record to the external cache directory for visibility
+        mFileName = getExternalCacheDir().getAbsolutePath();
+        mFileName += "/audiorecordtest.3gp";
 
         // prepare the ListView to display data
         listview_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, convo_hist);
@@ -139,33 +148,83 @@ public class ChatWindow extends Activity {
 
 
         // record a message for 5secs maybe? TODO: research standard wait time of voice recog softwares
+        startRecording();
+        Log.d(LOG_TAG, "start recording...");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopRecording();
+                Log.d(LOG_TAG, "stop recording...");
+            }
+        }, 5000);
 
+        startPlaying();
+        Log.d(LOG_TAG, "start playing...");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopPlaying();
+                Log.d(LOG_TAG, "stop playing...");
+            }
+        }, 10000);
 
         // send the recorded message to watson
         // recover text
         // autosend the message
     }
 
-    private void stopRecording() {
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
-    }
-
     private void startRecording() {
         mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile("recorded_info");
+        mRecorder.setOutputFile(mFileName);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
             mRecorder.prepare();
         } catch (IOException e) {
-            Log.d("ChatWindow: ", "prepare() failed");
+            Log.d(LOG_TAG, "prepare() failed");
         }
 
         mRecorder.start();
+    }
+
+    private void stopRecording() {
+        if (mRecorder == null) return;
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+    }
+
+    private void startPlaying() {
+        mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource(mFileName);
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+
+    private void stopPlaying() {
+        if (mPlayer == null) return;
+        mPlayer.release();
+        mPlayer = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
+
+        if (mPlayer != null) {
+            mPlayer.release();
+            mPlayer = null;
+        }
     }
 
     private void displayToastMsg(String message)
